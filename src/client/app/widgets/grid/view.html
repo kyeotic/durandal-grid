@@ -1,0 +1,38 @@
+<thead class="grid-columns" data-part="header">
+    <tr class="grid-column" data-part="headerRow" data-bind="foreach: columns">
+        <th class="grid-header-cell" data-bind="click: $parent.setSortColumn">
+            <span data-bind="text: header"></span>
+            <!-- ko if: $data == $parent.sortColumn() -->
+                <i class="fa fa-sort-desc" data-bind="css: { 'fa-sort-desc': $parent.sortDesc(), 'fa-sort-asc': !$parent.sortDesc() }"></i>
+            <!-- /ko -->
+        </th>
+    </tr>
+</thead>
+<tbody class="grid-body" data-bind="foreach: { data: currentPageRows, as: 'row' }" data-part="body">
+    <tr data-bind="foreach: $parent.columns" data-part="bodyRow">
+        <td data-bind="text: $parents[1].getColumnText($data, row)"></td>
+    </tr>
+</tbody>
+<tfoot data-part="footer">
+    <tr data-part="page-row" data-bind="if: showPaging">
+        <td class="grid-footer" data-bind="attr: { colspan: columns().length }">
+            <button class="btn btn-sm btn-default" data-bind="click: pageToFirst">First</button>
+            <button class="btn btn-sm btn-default" data-bind="click: pageBackward, enable: canPageBackward">Prev</button>
+            
+            <!-- ko foreach: pageButtons -->
+            <button class="btn btn-sm btn-default" data-bind="css: { 'btn-primary' : isActive }, click: $parent.goToPage, text: name"></button>
+            <!-- /ko -->
+            
+            <button class="btn btn-sm btn-default" data-bind="click: pageForward, enable: canPageForward">Next</button>
+            <button class="btn btn-sm btn-default" data-bind="click: pageToLast">Last</button>
+        </td>
+    </tr>
+    <tr data-part="page-size-row" data-bind="if: showPageSizeOptions">
+        <td>
+            Page Size: 
+            <!-- ko foreach: pageSizeOptions -->
+            <button class="btn btn-sm btn-default" data-bind="text: $data, click: $parent.pageSize, css: { 'btn-primary' : $parent.pageSize() == $data }"></button>
+            <!-- /ko -->            
+        </td>
+    </tr>
+</tfoot>

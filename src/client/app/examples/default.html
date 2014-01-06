@@ -1,0 +1,22 @@
+<div>
+    <h1>Default<small> - No Configuration</small></h1>
+    <p>
+        This is the simplest possible setup. An array of objects is supplied with no configuration, and no widget-parts are overridden. The grid default's use the first object's properties as the column headers. It should be noted that when you do not supply column options, as in this example, the supplied data must contain at least one element, or the grid cannot find column headers.
+    </p>
+
+    <h2>Example</h2>
+    <table class="paging-container grid-table" data-bind="grid: gridConfig"></table>
+
+    <h2>Javascript</h2>
+    <pre>
+var data = [ /* Some data /* ]
+
+return {
+    gridConfig: { data: data }
+};
+    </pre>
+
+    <h2>HTML</h2>
+    <pre>&lt;table class="paging-container grid-table" data-bind="grid: gridConfig"&gt;&lt;/table&gt;</pre>
+</div>
+

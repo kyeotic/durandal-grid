@@ -1,0 +1,29 @@
+<div>
+    <header class="nav navbar navbar-default navbar-fixed-top" role="banner">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" data-bind="attr: { href: '/' }, text: title"></a>
+            </div>
+
+            <nav role="navigation">
+                <div class="nav navbar-nav navbar-right">
+                    <i class="fa fa-spinner fa-3x fa-spin" data-bind="visible: router.isNavigating"></i>
+                </div>
+            </nav>
+        </div>    
+    </header>
+    
+    <div class="page-host container">
+        <div class="row">
+            <div class="col-sm-2">
+                <ul class="nav nav-stacked nav-project" role="complementary" data-bind="foreach: router.navigationModel">
+                    <li>
+                        <a class="navbar-link btn-block" data-bind="attr: { href: hash }, text: title, css: { active: isActive }"></a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="col-sm-10" data-bind="router: { model: router.activeItem, cacheViews: false }"></div>
+        </div>
+    </div>
+</div>

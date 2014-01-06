@@ -1,0 +1,22 @@
+<div>
+	<h1>Observable<small> - Observable Data and Configuration</small></h1>
+	<p>
+		The data and configuration passed to the Durandal Grid can be observable, and changes will cause the grid to update.
+	</p>
+
+	<h2>Example</h2>
+	<table class="paging-container grid-table" data-bind="grid: gridConfig"></table>
+
+	<h2>Javascript</h2>
+	<pre>
+var data = [ /* Some data /* ]
+
+return {
+	gridConfig: { data: data }
+};
+	</pre>
+
+	<h2>HTML</h2>
+	<pre>&lt;table class="paging-container grid-table" data-bind="grid: gridConfig"&gt;&lt;/table&gt;</pre>
+</div>
+
