@@ -24,7 +24,7 @@
             <!-- /ko -->
             
             <button class="btn btn-sm btn-default" data-bind="click: pageForward, enable: canPageForward">Next</button>
-            <button class="btn btn-sm btn-default" data-bind="click: pageToLast">Last</button>
+            <button class="btn btn-sm btn-default" data-bind="click: pageToLast, text: 'Last (' + (lastPageIndex() + 1) + ')'"></button>
         </td>
     </tr>
     <tr data-part="page-size-row" data-bind="if: showPageSizeOptions">
