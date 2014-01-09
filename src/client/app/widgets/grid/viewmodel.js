@@ -1,3 +1,8 @@
+/*
+ * Durandal Grid 1.0.0 by Timothy Moran
+ * Available via the MIT license.
+ * see: https://github.com/tyrsius/durandal-grid for details.
+ */
 define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 
 	var getColumnsFromData = function(data) {
