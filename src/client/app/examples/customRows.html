@@ -1,0 +1,79 @@
+<div>
+    <h1>Custom Rows<small> - Overriding Data Parts for Custom Grids</small></h1>
+    <p>
+        In advanced scenarios, you will need more control over Durandal Grid's HTML. The following data-parts are available to be overriden:
+    </p>
+
+    <ol>
+        <li>header - <small>The entire <code>&lt;thead&gt;</code> element</small></li>
+        <li>headerRow - <small>The <code>&lt;tr&gt;</code> element in the head containing the <code>foreach: columns</code> binding</small></li>
+        <li>body - <small>The <code>&lt;tbody&gt;</code> element, which contains the <code>foreach: currentPageRows</code> binding</small></li>
+        <li>footer - <small>The <code>&lt;tfoot&gt;</code> element, which contains the page buttons row, and the page size buttons row</small></li>
+        <li>pageRow - <small>The <code>&lt;tr&gt;</code> element of the page buttons, which contains the <code>if: showPaging</code> binding</small></li>
+        <li>pageSizeRow - <small>The <code>&lt;tr&gt;</code> element of the page size buttons, which tonains the <code>if showPageSizeOptions</code> binding</small></li>
+    </ol>
+
+    <p>
+        If you need to customize the text in the column headers, or style the grid, overridding data-parts is not necessary. Those can be controlled from the viewmodel or CSS, respectively. The most common scenaris for overridding the HTML, I suspect, will be to provide button's for your rows.
+    </p>
+
+    <h2>Overriding the Body</h2>
+
+    <p>
+        Unfortunately, due to the way Durandal's data-part system works, the row inside the <code>&lt;tbody&gt;</code> cannot be made a data-part; it is contained inside a foreach loop, which clears out the internal contents and removes any data-part overrides. So the only option is to allow the whole <code>&lt;tbody&gt;</code> to be overridden. The "gotcha" here is that when you override a data-part, you don't override its children, you override the whole node. This means that the  <code>foreach: currentPageRows</code> bindings gets removed, breaking the grid. When you override the body, you must include this entire binding.
+    </p>
+
+    <p>
+        One very handy part of Durandal's widget system is that to reference functions on the containing viewmodel you can just use <code>$root.someFunction</code>, instead of trying to figure out which <code>$parents[n]</code> to use. Here is an example of a grid with a remove button added on each row.
+    </p>
+
+    <h2>Example</h2>
+    <button class="btn btn-sm btn-default" data-bind="click: addRow">Add Person</button>
+
+    <table class="" data-bind="grid: gridConfig">
+        <tbody data-part="body" data-bind="foreach: { data: currentPageRows, as: 'row' }">
+            <tr>
+                <td data-bind="text: firstName"></td>
+                <td data-bind="text: lastName"></td>
+                <td data-bind="text: age"></td>
+                <td><button class="btn btn-xs btn-danger" data-bind="click: $root.removeRow">Remove</button></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Javascript</h2>
+    <pre>
+/* Create observables /*
+
+return {
+    //Observable Stuff
+    addRow: addRow,
+    removeRow: removeRow,
+
+    //Grid config options
+    gridConfig: { 
+        data: observableData,
+        pageSize: 5,
+        columns: [
+            { header: 'First Name', property: 'firstName' },
+            { header: 'Last Name', property: 'lastName' },
+            { header: 'Age', property: 'age' },
+            { header: '', property: '', canSort: false }
+        ]
+    }
+};
+    </pre>
+
+    <h2>HTML</h2>
+    <pre>&lt;table class="" data-bind="grid: gridConfig"e&gt;
+    &lt;tbody data-part="body" data-bind="foreach: { data: currentPageRows, as: 'row' }"e&gt;
+        &lt;tre&gt;
+            &lt;td data-bind="text: firstName"e&gt;&lt;/tde&gt;
+            &lt;td data-bind="text: lastName"e&gt;&lt;/tde&gt;
+            &lt;td data-bind="text: age"e&gt;&lt;/tde&gt;
+            &lt;tde&gt;&lt;button class="btn btn-xs btn-danger" data-bind="click: $root.removeRow"e&gt;Remove&lt;/buttone&gt;&lt;/tde&gt;
+        &lt;/tre&gt;
+    &lt;/tbodye&gt;
+&lt;/tablee&gt;</pre>
+</div>
+

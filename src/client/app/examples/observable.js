@@ -16,13 +16,18 @@ function (ko, app, randomData) {
 		observableData.push(randomData.getPerson())
 	};
 
+	var removeRow = function() {
+		if (observableData().length > 0)
+			observableData.remove(observableData()[0]);
+	};
+
 	var pageSizeFlip = false,
 		flipPageSizes = function() {
 			if (pageSizeFlip)
 				pageSizeOptions([5, 10, 15]);
 			else
 				pageSizeOptions([10, 15, 20]);
-			pageSize = !pageSize;
+			pageSizeFlip = !pageSizeFlip;
 		};
 
 	var togglePageSizeOptions = function() {
@@ -39,13 +44,14 @@ function (ko, app, randomData) {
 			if (columns().indexOf(ageColumn) !== -1)
 				columns.remove(ageColumn);
 			else
-				colummns.push(ageColumn);
+				columns.push(ageColumn);
 		};
 
 
     return {
     	//Observable Stuff
     	addRow: addRow,
+    	removeRow: removeRow,
     	pageSize: pageSize,
     	flipPageSizes: flipPageSizes,
     	togglePageSizeOptions: togglePageSizeOptions,
