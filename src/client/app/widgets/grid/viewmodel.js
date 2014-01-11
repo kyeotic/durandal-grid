@@ -54,6 +54,8 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 		var self = this,
 			columnsBase = ko.observable();
 
+		
+
 		self.rows = ko.isObservable(config.data) ? config.data : ko.observableArray(config.data || []);
 
 		self.columns = ko.computed(function() {

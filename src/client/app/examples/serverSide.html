@@ -1,0 +1,36 @@
+<div>
+    <h1>Server Side Paging<small> - Getting data with promises</small></h1>
+    <p>
+        The following can be controlled via config properties passed to the grid.
+    </p>
+
+
+    <h2>Example</h2>
+    <table class="paging-container grid-table" data-bind="grid: gridConfig"></table>
+
+    <h2>Javascript</h2>
+    <pre>
+var pager = {
+    startAt: 0,
+    getItems: fakeService.getPeople
+};
+
+return {
+    gridConfig: { 
+        data: pager,
+        pageSize: 5,
+        columns:[
+            { header: 'First Name', property: 'firstName' },
+            { header: 'Last Name', property: 'lastName' },
+            { header: 'Age', property: 'age'
+        ]
+    }
+};
+    </pre>
+
+    <h2>HTML</h2>
+    <pre>&lt;table class="paging-container grid-table" data-bind="grid: gridConfig"&gt;&lt;/table&gt;</pre>
+
+
+</div>
+

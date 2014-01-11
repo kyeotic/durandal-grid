@@ -5,12 +5,12 @@
     </p>
 
     <ol>
-        <li>header - <small>The entire <code>&lt;thead&gt;</code> element</small></li>
-        <li>headerRow - <small>The <code>&lt;tr&gt;</code> element in the head containing the <code>foreach: columns</code> binding</small></li>
-        <li>body - <small>The <code>&lt;tbody&gt;</code> element, which contains the <code>foreach: currentPageRows</code> binding</small></li>
-        <li>footer - <small>The <code>&lt;tfoot&gt;</code> element, which contains the page buttons row, and the page size buttons row</small></li>
-        <li>pageRow - <small>The <code>&lt;tr&gt;</code> element of the page buttons, which contains the <code>if: showPaging</code> binding</small></li>
-        <li>pageSizeRow - <small>The <code>&lt;tr&gt;</code> element of the page size buttons, which tonains the <code>if showPageSizeOptions</code> binding</small></li>
+        <li><strong>header</strong> - <small>The entire <code>&lt;thead&gt;</code> element</small></li>
+        <li><strong>headerRow</strong> - <small>The <code>&lt;tr&gt;</code> element in the head containing the <code>foreach: columns</code> binding</small></li>
+        <li><strong>body</strong> - <small>The <code>&lt;tbody&gt;</code> element, which contains the <code>foreach: currentPageRows</code> binding</small></li>
+        <li><strong>footer</strong> - <small>The <code>&lt;tfoot&gt;</code> element, which contains the page buttons row, and the page size buttons row</small></li>
+        <li><strong>pageRow</strong> - <small>The <code>&lt;tr&gt;</code> element of the page buttons, which contains the <code>if: showPaging</code> binding</small></li>
+        <li><strong>pageSizeRow</strong> - <small>The <code>&lt;tr&gt;</code> element of the page size buttons, which tonains the <code>if showPageSizeOptions</code> binding</small></li>
     </ol>
 
     <p>
@@ -71,9 +71,9 @@ return {
             &lt;td data-bind="text: firstName"e&gt;&lt;/tde&gt;
             &lt;td data-bind="text: lastName"e&gt;&lt;/tde&gt;
             &lt;td data-bind="text: age"e&gt;&lt;/tde&gt;
-            &lt;tde&gt;&lt;button class="btn btn-xs btn-danger" data-bind="click: $root.removeRow"e&gt;Remove&lt;/buttone&gt;&lt;/tde&gt;
-        &lt;/tre&gt;
-    &lt;/tbodye&gt;
-&lt;/tablee&gt;</pre>
+            &lt;tde&gt;&lt;button class="btn btn-xs btn-danger" data-bind="click: $root.removeRow"&gt;Remove&lt;/button&gt;&lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;</pre>
 </div>
 
