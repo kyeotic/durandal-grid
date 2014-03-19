@@ -1,9 +1,10 @@
-<table class="table table-striped responsive-table">
-	<label style="float: right" data-bind="if: showSearchBox">
-		Cerca:
-		<input placeholder="Search..." type="search" name="search" data-bind="value: query, valueUpdate: 'keyup'" />
-	</label>
+<table>
     <thead class="grid-columns" data-part="header">
+        <tr data-bind="if: showSearchBox" data-part="search" class="grid-search">
+            <td data-bind="attr: { colspan: columns().length }">
+                <input placeholder="Search..." type="search" name="search" data-bind="value: query, valueUpdate: 'keyup'" />
+            </td>
+        </tr>
         <tr class="grid-column" data-part="headerRow" data-bind="foreach: columns">
             <th class="grid-header-cell" data-bind="click: $parent.setSortColumn">
                 <span data-bind="text: header"></span>
