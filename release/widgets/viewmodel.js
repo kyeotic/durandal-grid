@@ -55,7 +55,7 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 			columnsBase = ko.observable();
 
 		self.rows = ko.isObservable(config.data) ? config.data : ko.observableArray(config.data || []);
-
+		
 		self.columns = ko.computed(function() {
 			var unwrappedColumns = ko.unwrap(config.columns),
 				unwrappedRows = ko.unwrap(self.rows);
@@ -67,7 +67,26 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 				return '';
 			return ko.unwrap(row[column.property]);
 		};
-
+		
+		//
+		// searching
+		//
+		self.query = ko.observable("");
+		
+		self.searchColumns = ko.observableArray([]);
+		
+		self.showSearchBox = ko.observable(false);
+		
+		for(var i = 0; i < self.columns().length; i++) {
+			if(self.columns()[i].canSearch === true) {
+				self.searchColumns.push(self.columns()[i].property);
+			}
+		}
+		
+		if(self.searchColumns().length != 0) {
+			self.showSearchBox(true);
+		}
+		
 		//
 		//sorting
 		//
@@ -92,24 +111,35 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 				return 0;
 			return propA < propB ? -1 : 1;
 		};
-
-		self.sortedRows = ko.computed(function () {
+		
+		self.sortedRows = ko.computed(function() {
 			//If a layer before sorting every gets introduced (like filtering), this "double" needs to go there
 			var sorted = self.rows(),
+				search = self.query().toLowerCase(),
 				sortDirection = self.sortDesc() ? 1 : -1,
 				sortProperty = self.sortColumn().property || '';
-
-			if (sortProperty === '' )
-				return sorted;
-
+			
 			var sort;
 			if (customSort)
 				sort = function(a, b) { return customSort(a, b) * sortDirection; };
 			else
 				sort = function (a, b) { return standardSort(a, b, sortProperty) * sortDirection; };
 			
-			return sorted.sort(sort);
-		}).extend({ throttle: 10 }); //Throttle so that sortColumn and direction don't cause double update, it flickers
+			sorted.sort(sort);
+				
+			if(self.searchColumns().length == 0)
+				return sorted;
+			
+			return ko.utils.arrayFilter(sorted, function(row) {
+				for(var i = 0; i < self.searchColumns().length; i++) {
+					if(new String(row[self.searchColumns()[i]]).toLowerCase().indexOf(search) >= 0) {
+						return true;
+					}
+				}
+				return false;
+			});
+		}, self).extend({ throttle: 10 }); //Throttle so that sortColumn and direction don't cause double update, it flickers
+		
 		
 		///
 		//pagination
