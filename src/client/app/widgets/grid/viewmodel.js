@@ -54,10 +54,8 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 		var self = this,
 			columnsBase = ko.observable();
 
-		
-
 		self.rows = ko.isObservable(config.data) ? config.data : ko.observableArray(config.data || []);
-
+		
 		self.columns = ko.computed(function() {
 			var unwrappedColumns = ko.unwrap(config.columns),
 				unwrappedRows = ko.unwrap(self.rows);
@@ -71,6 +69,39 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 		};
 
 		//
+		// searching
+		//
+		self.query = ko.observable("");
+
+		self.searchColumns = ko.computed(function() {
+			var columns = self.columns();
+			return ko.utils.arrayFilter(columns, function(col) {
+				return ko.unwrap(col.canSearch) === true;
+			})
+		});
+
+		self.showSearchBox = ko.computed(function() {
+			return self.searchColumns().length > 0;
+		});
+
+		self.filteredRows = ko.computed(function() {
+			var rows = self.rows(),
+				search = self.query().toLowerCase();
+
+			if(self.searchColumns().length == 0)
+				return rows;
+
+			return ko.utils.arrayFilter(rows, function(row) {
+				for(var i = 0; i < self.searchColumns().length; i++) {
+					if(row[self.searchColumns()[i].property].toLowerCase().indexOf(search) >= 0) {
+						return true;
+					}
+				}
+				return false;
+			});
+		}).extend({ throttle: 50 }); //We don't want typing to cause too many changes 
+
+		
 		//sorting
 		//
 		var customSort;
@@ -81,7 +112,7 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 				return;
 			//If column.sort is undefined, it will clear the customSort, which is what we want in that case
 			customSort = column.sort;
-			
+
 			//Switch if column is same, otherwise set to true
 			self.sortDesc(column == self.sortColumn() ? !self.sortDesc() : true);
 			self.sortColumn(column);
@@ -96,8 +127,7 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 		};
 
 		self.sortedRows = ko.computed(function () {
-			//If a layer before sorting every gets introduced (like filtering), this "double" needs to go there
-			var sorted = self.rows(),
+			var sorted = self.filteredRows().slice(), //We don't want to be sorting the original list
 				sortDirection = self.sortDesc() ? 1 : -1,
 				sortProperty = self.sortColumn().property || '';
 
@@ -109,9 +139,10 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 				sort = function(a, b) { return customSort(a, b) * sortDirection; };
 			else
 				sort = function (a, b) { return standardSort(a, b, sortProperty) * sortDirection; };
-			
+
 			return sorted.sort(sort);
 		}).extend({ throttle: 10 }); //Throttle so that sortColumn and direction don't cause double update, it flickers
+		
 		
 		///
 		//pagination

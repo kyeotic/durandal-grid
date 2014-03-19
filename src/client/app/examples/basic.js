@@ -20,7 +20,7 @@ function (ko, app, randomData) {
 			pageSizeOptions: [5, 10, 15],
 			columns: [
 				{ header: 'First Name', property: 'firstName' },
-				{ header: 'Last Name', property: 'lastName' },
+				{ header: 'Last Name', property: 'lastName', canSearch: true },
 				{ header: 'Age', property: 'age', canSort: true, sort: function(a,b) { return a.age < b.age ? -1 : 1; } },
 				{ header: 'Number', property: 'slot'}
 			]
