@@ -67,27 +67,41 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 				return '';
 			return ko.unwrap(row[column.property]);
 		};
-		
+
 		//
 		// searching
 		//
 		self.query = ko.observable("");
+
+		self.searchColumns = ko.computed(function() {
+			var columns = self.columns();
+			return ko.utils.arrayFilter(columns, function(col) {
+				return ko.unwrap(col.canSearch) === true;
+			})
+		});
+
+		self.showSearchBox = ko.computed(function() {
+			return self.searchColumns().length > 0;
+		});
+
+		self.filteredRows = ko.computed(function() {
+			var rows = self.rows(),
+				search = self.query().toLowerCase();
+
+			if(self.searchColumns().length == 0)
+				return rows;
+
+			return ko.utils.arrayFilter(rows, function(row) {
+				for(var i = 0; i < self.searchColumns().length; i++) {
+					if(row[self.searchColumns()[i].property].toLowerCase().indexOf(search) >= 0) {
+						return true;
+					}
+				}
+				return false;
+			});
+		}).extend({ throttle: 50 }); //We don't want typing to cause too many changes 
+
 		
-		self.searchColumns = ko.observableArray([]);
-		
-		self.showSearchBox = ko.observable(false);
-		
-		for(var i = 0; i < self.columns().length; i++) {
-			if(self.columns()[i].canSearch === true) {
-				self.searchColumns.push(self.columns()[i].property);
-			}
-		}
-		
-		if(self.searchColumns().length != 0) {
-			self.showSearchBox(true);
-		}
-		
-		//
 		//sorting
 		//
 		var customSort;
@@ -98,7 +112,7 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 				return;
 			//If column.sort is undefined, it will clear the customSort, which is what we want in that case
 			customSort = column.sort;
-			
+
 			//Switch if column is same, otherwise set to true
 			self.sortDesc(column == self.sortColumn() ? !self.sortDesc() : true);
 			self.sortColumn(column);
@@ -111,34 +125,23 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 				return 0;
 			return propA < propB ? -1 : 1;
 		};
-		
-		self.sortedRows = ko.computed(function() {
-			//If a layer before sorting every gets introduced (like filtering), this "double" needs to go there
-			var sorted = self.rows(),
-				search = self.query().toLowerCase(),
+
+		self.sortedRows = ko.computed(function () {
+			var sorted = self.filteredRows().slice(), //We don't want to be sorting the original list
 				sortDirection = self.sortDesc() ? 1 : -1,
 				sortProperty = self.sortColumn().property || '';
-			
+
+			if (sortProperty === '' )
+				return sorted;
+
 			var sort;
 			if (customSort)
 				sort = function(a, b) { return customSort(a, b) * sortDirection; };
 			else
 				sort = function (a, b) { return standardSort(a, b, sortProperty) * sortDirection; };
-			
-			sorted.sort(sort);
-				
-			if(self.searchColumns().length == 0)
-				return sorted;
-			
-			return ko.utils.arrayFilter(sorted, function(row) {
-				for(var i = 0; i < self.searchColumns().length; i++) {
-					if(new String(row[self.searchColumns()[i]]).toLowerCase().indexOf(search) >= 0) {
-						return true;
-					}
-				}
-				return false;
-			});
-		}, self).extend({ throttle: 10 }); //Throttle so that sortColumn and direction don't cause double update, it flickers
+
+			return sorted.sort(sort);
+		}).extend({ throttle: 10 }); //Throttle so that sortColumn and direction don't cause double update, it flickers
 		
 		
 		///
