@@ -66,8 +66,8 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 			if (!column.property) {
 				return '';
 			}
-			if ('function' === typeof(column.property)) {
-				return column.property(row);
+			if ('function' === typeof (column.property) && !ko.isObservable(column.property)) {
+			    return column.property(row);
 			}
 			return ko.unwrap(row[column.property]);
 		};
