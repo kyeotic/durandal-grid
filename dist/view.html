@@ -1,0 +1,43 @@
+<table data-bind="css: gridClasses">
+    <thead class="grid-columns" data-part="header">
+        <tr data-bind="if: showSearchBox" data-part="search" class="grid-search">
+            <td data-bind="attr: { colspan: columns().length }">
+                <input placeholder="Search..." type="search" name="search" data-bind="value: query, valueUpdate: 'keyup'" />
+            </td>
+        </tr>
+        <tr class="grid-column" data-part="headerRow" data-bind="foreach: columns">
+            <th class="grid-header-cell" data-bind="click: $parent.setSortColumn">
+                <span data-bind="text: header"></span>
+                <!-- ko if: $data == $parent.sortColumn() -->
+                    <i class="fa fa-sort-desc" data-bind="css: { 'fa-sort-desc': $parent.sortDesc(), 'fa-sort-asc': !$parent.sortDesc() }"></i>
+                <!-- /ko -->
+            </th>
+        </tr>
+    </thead>
+    <tbody class="grid-body" data-bind="foreach: { data: rows, as: 'row' }" data-part="body">
+        <tr data-bind="foreach: $parent.columns">
+            <td data-bind="text: $parents[1].getColumnText($data, row)"></td>
+        </tr>
+    </tbody>
+    <tfoot data-part="footer">
+        <tr data-part="pagingRow" data-bind="if: showPaging">
+            <td class="grid-footer" data-bind="attr: { colspan: columns().length }">
+                <div class="pull-left grid-page-container">
+                    
+                    <button class="btn btn-sm btn-default" data-bind="click: pageToFirst"><i class="fa fa-step-backward"></i></button>
+                    <button class="btn btn-sm btn-default" data-bind="click: pageBackward, enable: canPageBackward"><i class="fa fa-play fa-rotate-180"></i></button>
+                    Page <span data-bind="text: currentPageNumber"></span>
+                    of <span data-bind="text: pageCount"></span>
+                    <button class="btn btn-sm btn-default" data-bind="click: pageForward, enable: canPageForward"><i class="fa fa-play"></i></button>
+                    <button class="btn btn-sm btn-default" data-bind="click: pageToLast"><i class="fa fa-step-forward"></i></button>
+                </div>
+                <div class="pull-right grid-page-size-container" data-bind="if: showPageSizeOptions">
+                    Page Size: 
+                    <!-- ko foreach: pageSizeOptions -->
+                    <button class="btn btn-sm btn-default" data-bind="text: $data, click: $parent.pageSize, css: { 'btn-primary' : $parent.pageSize() == $data }"></button>
+                    <!-- /ko -->
+                </div>
+            </td>
+        </tr>
+    </tfoot>
+</table>
