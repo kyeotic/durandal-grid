@@ -7,16 +7,10 @@ var express = require('express'),
 var dir = __dirname + '/client/';
 
 //Configure
-app.configure(function() {    
-    app.set('views', __dirname + '/views/');
-    app.engine('.html', require("./app_modules/htmlEngine.js")());
-    app.set('view engine', 'html');
-    app.use(express.compress());
-    app.use(express.bodyParser());
-    app.use(express.methodOverride());
-    app.use(express['static'](dir));
-    app.use(app.router); 
-});
+app.set('views', __dirname + '/views/');
+app.engine('.html', require("./app_modules/htmlEngine.js")());
+app.set('view engine', 'html');
+app.use(express['static'](dir));
 
 //Index Route
 app.get('/', function(req, res){        

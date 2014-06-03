@@ -30,7 +30,7 @@
     <h2>Example</h2>
     <button class="btn btn-sm btn-default" data-bind="click: addRow">Add Person</button>
 
-    <table class="" data-bind="grid: gridConfig">
+    <div data-bind="grid: gridConfig" class="table">
         <tbody data-part="body" data-bind="foreach: { data: currentPageRows, as: 'row' }">
             <tr>
                 <td data-bind="text: firstName"></td>
@@ -39,7 +39,7 @@
                 <td><button class="btn btn-xs btn-danger" data-bind="click: $root.removeRow">Remove</button></td>
             </tr>
         </tbody>
-    </table>
+    </div>
 
     <h2>Javascript</h2>
     <pre>
@@ -65,13 +65,13 @@ return {
     </pre>
 
     <h2>HTML</h2>
-    <pre>&lt;table class="" data-bind="grid: gridConfig"e&gt;
-    &lt;tbody data-part="body" data-bind="foreach: { data: currentPageRows, as: 'row' }"e&gt;
-        &lt;tre&gt;
-            &lt;td data-bind="text: firstName"e&gt;&lt;/tde&gt;
-            &lt;td data-bind="text: lastName"e&gt;&lt;/tde&gt;
-            &lt;td data-bind="text: age"e&gt;&lt;/tde&gt;
-            &lt;tde&gt;&lt;button class="btn btn-xs btn-danger" data-bind="click: $root.removeRow"&gt;Remove&lt;/button&gt;&lt;/td&gt;
+    <pre>&lt;table class="" data-bind="grid: gridConfig"&gt;
+    &lt;tbody data-part="body" data-bind="foreach: { data: currentPageRows, as: 'row' }"&gt;
+        &lt;tr&gt;
+            &lt;td data-bind="text: firstName"e&gt;&lt;/td&gt;
+            &lt;td data-bind="text: lastName"e&gt;&lt;/td&gt;
+            &lt;td data-bind="text: age"e&gt;&lt;/td&gt;
+            &lt;td&gt;&lt;button class="btn btn-xs btn-danger" data-bind="click: $root.removeRow"&gt;Remove&lt;/button&gt;&lt;/td&gt;
         &lt;/tr&gt;
     &lt;/tbody&gt;
 &lt;/table&gt;</pre>

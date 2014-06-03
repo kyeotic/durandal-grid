@@ -4,7 +4,7 @@ require.config({
         'durandal':'../lib/durandal/js',
         'plugins' : '../lib/durandal/js/plugins',
         'transitions' : '../lib/durandal/js/transitions',
-        'knockout': '../lib/knockout-2.3.0',
+        'knockout': '../lib/knockout-3.1.0',
         'bootstrap': '//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js',
         'jquery': '//code.jquery.com/jquery-1.10.2.min',
         'Q' : '../lib/q.min'
@@ -33,14 +33,7 @@ function(system, app, viewLocator) {
         dialog: true,
         widget: {
             kinds: ['grid']
-        },
-
-        //App plugins
-        envPatch: true,
-        knockoutExtensions: true,
-        knockoutCommands: true,
-        knockoutActivity: true,
-        qPatch: { debugMode: false }
+        }
     });
 
     app.title = 'Durandal Grid Widget';

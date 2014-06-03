@@ -1,6 +1,9 @@
 <div>
     <h1>Basic<small> - Simple Configuration</small></h1>
     <p>
+        To ensure the table can be properly styled, especially by bootstrap, the <code>Table</code> element in the widget will steal all the classes from the element that initialized it. To stop this from occuring, set the option <code>stealClasses</code> to false. If you want to copy the classes instead of steal, set <code>stealClasses</code> to <code>'copy'</code>.
+    </p>
+    <p>
         The following can be controlled via config properties passed to the grid.
     </p>
 
@@ -22,7 +25,7 @@
     </ul>
 
     <h2>Example</h2>
-    <table class="paging-container grid-table" data-bind="grid: gridConfig"></table>
+    <table class="paging-container grid-table table" data-bind="grid: gridConfig"></table>
 
     <h2>Javascript</h2>
     <pre>

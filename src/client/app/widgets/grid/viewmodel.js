@@ -1,9 +1,24 @@
 /*
- * Durandal Grid 1.0.0 by Timothy Moran
+ * Durandal Grid 2.0.0 by Timothy Moran
  * Available via the MIT license.
  * see: https://github.com/tyrsius/durandal-grid for details.
  */
 define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
+
+
+	//====================== Support Code and Polyfills =====================//
+
+	var toNumber = function(input) { return parseFloat(input); };
+
+	var range = function(bottom, top) {
+		var result = [bottom],
+			lastIndex = 0;
+
+		while (result[lastIndex] < top) {
+			result.push(result[lastIndex++] + 1);
+		}
+		return result;
+	};
 
 	var getColumnsFromData = function(data) {
 		var data = ko.unwrap(data) || [];
@@ -19,26 +34,20 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 		return keys;
 	};
 
-	//Removing the SugarJS dependency as slowly as possible
-	//May be refactoring this later
-	var toNumber = function(input) {
-		return parseFloat(input);
+	var fixupColumns = function(columns) {
+		if (!(columns instanceof Array))
+			throw new Error("Grid columns must be an array");
+		return columns.map(function(column) {
+			if (typeof column == 'string' || column instanceof String)
+				return { property: column, header: column };
+			else if (column.property === undefined)
+				throw new Error("Columns must contain a property named 'property' so that they can look up their value");
+			else
+				return column;
+		});
 	};
-
-	var range = function(bottom, top) {
-		var result = [bottom],
-			lastIndex = 0;
-
-		while (result[lastIndex] < top) {
-			result.push(result[lastIndex++] + 1);
-		}
-		return result;
-	};
-
-	//IE7-8 polyfill
-	(function(fn){
-		if (!fn.map) fn.map=function(f){var r=[];for(var i=0;i<this.length;i++)r.push(f(this[i]));return r}
-	})(Array.prototype);
+	
+	//=======================================================================//		
 
 	//
 	//DefaultValues
@@ -51,21 +60,24 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 	};
 
 	var Grid = function(config) {
-		var self = this,
-			columnsBase = ko.observable();
+		var self = this;
 
-		self.rows = ko.isObservable(config.data) ? config.data : ko.observableArray(config.data || []);
+		self.allRows = ko.isObservable(config.data) ? config.data : ko.observableArray(config.data || []);
 		
 		self.columns = ko.computed(function() {
 			var unwrappedColumns = ko.unwrap(config.columns),
-				unwrappedRows = ko.unwrap(self.rows);
-			return (unwrappedColumns || getColumnsFromData(unwrappedRows));
+				unwrappedRows = ko.unwrap(self.allRows);
+			return (unwrappedColumns !== undefined ? fixupColumns(unwrappedColumns) : getColumnsFromData(unwrappedRows));
 		});
 
 		self.getColumnText = function(column, row) {
 			if (!column.property)
 				return '';
-			return ko.unwrap(row[column.property]);
+			else if (typeof (column.property) === 'function' && !ko.isObservable(column.property))
+				return column.property(row);
+			else
+				return ko.unwrap(row[ko.unwrap(column.property)]);
+
 		};
 
 		//
@@ -74,9 +86,9 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 		self.query = ko.observable("");
 
 		self.searchColumns = ko.computed(function() {
-			var columns = self.columns();
-			return ko.utils.arrayFilter(columns, function(col) {
-				return ko.unwrap(col.canSearch) === true;
+			var columnsToSearch = self.columns();
+			return ko.utils.arrayFilter(columnsToSearch, function(column) {
+				return ko.unwrap(column.canSearch) === true;
 			})
 		});
 
@@ -85,7 +97,7 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 		});
 
 		self.filteredRows = ko.computed(function() {
-			var rows = self.rows(),
+			var rows = self.allRows(),
 				search = self.query().toLowerCase();
 
 			if(self.searchColumns().length == 0)
@@ -152,23 +164,23 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 
 		self.pageSize = ko.isObservable(config.pageSize) 
 			? config.pageSize 
-			: ko.observable(config.pageSize || defaults.pageSize);
+			: ko.observable(config.pageSize !== undefined ? config.pageSize : defaults.pageSize);
 
 		self.alwaysShowPaging = ko.isObservable(config.alwaysShowPaging) 
 			? config.alwaysShowPaging 
-			: ko.observable(config.alwaysShowPaging || defaults.alwaysShowPaging);
+			: ko.observable(config.alwaysShowPaging !== undefined ? config.alwaysShowPaging : defaults.alwaysShowPaging);
 
 		self.pageSizeOptions = ko.isObservable(config.pageSizeOptions) 
 			? config.pageSizeOptions 
-			: ko.observable(config.pageSizeOptions || defaults.pageSizeOptions);
+			: ko.observable(config.pageSizeOptions !== undefined ? config.pageSizeOptions : defaults.pageSizeOptions);
 
 		self.showPageSizeOptions = ko.isObservable(config.showPageSizeOptions) 
 			? config.showPageSizeOptions 
-			: ko.observable(config.showPageSizeOptions || defaults.showPageSizeOptions);
+			: ko.observable(config.showPageSizeOptions !== undefined ? config.showPageSizeOptions : defaults.showPageSizeOptions);
 
 		self.pageCount = ko.computed(function() {
-			return self.rows().length / self.pageSize();
-		});        
+			return Math.ceil(self.sortedRows().length / self.pageSize());
+		});
 
 		self.showPaging = ko.computed(function() {
 			var alwaysShow = self.alwaysShowPaging(),
@@ -203,8 +215,10 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 			if (self.canPageBackward())
 				self.pageIndex(self.pageIndex() - 1);
 		};
-		
-		self.currentPageRows = ko.computed({
+
+		//We call this rows because it's actually what the grid binds against
+		//And we want the most obvious name for that binding
+		self.rows = ko.computed({
 			read: function () {
 				var pageStartIndex = self.pageIndex() * self.pageSize(),
 					sortedRows = self.sortedRows();
@@ -223,64 +237,23 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 				self.pageIndex(self.lastPageIndex());
 		});
 
-
-		var pageCount = 5; //Max index, 5 pages, the logic doesn't work for even numbers
-        //The buttons for paginiation
-        //Will be buttons for up to 5 pages, with a selected page
-        //Selected page will be in the middle, when possible
-        self.pageButtons = ko.computed(function() {
-            var current = toNumber(self.pageIndex()),
-                last = toNumber(self.lastPageIndex()),
-                top = last,
-                bottom = 0;
-            
-            if (current === 0) {
-                //Get current to either the last page, or pageCount from current
-                top = Math.min(pageCount - 1, last);
-            } else if (current === last) {
-                //Get from either the first page, or pageCount less than current, to current
-                bottom = Math.max(0, current - pageCount + 1);
-            } else {
-                //If it fits, we want pageCount buttons with current in the middle
-                //If it won't fit, we want the smaller of pageCount or the total number of pages
-                //Because we don't want the number of buttons to shrink in the latter case
-                var padding = Math.floor(pageCount / 2);
-                
-                bottom = Math.max(0, current - padding);
-                top = Math.min(last, current + padding);
-                
-                //There is room to pad more, and we don't have pageCount buttons
-                //Pagecount-1 because pagesa re 0 indexed
-                while (top - bottom < (pageCount - 1)
-						&& last > padding
-						&& (top < last || bottom > 0)) {
-					if (top < last)
-						top++;
-					else
-						bottom--;
-					if (bottom === 0)
-						break;
-				}
-			}
-
-            var pages =  range(bottom, top).map(function(n) {
-                return { name: n + 1, isActive: n === current };
-            });
-
-            return pages;
-        });
-
 		self.goToPage = function(page) {
 			self.pageIndex(parseInt(page.name, 10) - 1);
 		};
+
+		self.stealClasses = config.stealClasses === undefined || config.stealClasses;
+		self.gridClasses = ko.observable('');
+
+		self.compositionComplete = function(view, parent) {
+			var classes = parent.className;
+			if (classes && classes.length > 0 && self.stealClasses) {
+				self.gridClasses(classes);
+				if (self.stealClasses !== 'copy')
+					parent.className = '';
+			}
+		};
 	};
 
-
-	/*
-		This widget can only be bound on a <Table> element in the DOM
-		Overridding it's parts can only be done if the un-"processed" <Table> would have legal HTML structure
-		Otherwise it will not render correctly in IE
-	*/
 	return function GridWidget() {
 		var self = this;
 

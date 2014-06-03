@@ -18,6 +18,7 @@ function (ko, app, randomData) {
 			pageSize: 5,
 			showPageSizeOptions: true,
 			pageSizeOptions: [5, 10, 15],
+			//stealClasses: 'copy',
 			columns: [
 				{ header: 'First Name', property: 'firstName' },
 				{ header: 'Last Name', property: 'lastName', canSearch: true },

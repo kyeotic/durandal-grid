@@ -1,0 +1,33 @@
+<div>
+    <h1>Bare<small> - Barely Configured</small></h1>
+    <p>
+        Sometimes you don't want any configuration and you just want the grid to bind against the simplest possibly data. In these cases you can either pass just the rows of data you want to show, letting the widget figure out everything else, or pass your data with a list of property-name-only columns. In either case it is still necessary that the configuration be an object with at the very least a <code>data</code> property.
+    </p>
+
+    <h2>Bare Data</h2>
+    <table class="paging-container grid-table" data-bind="grid: grid1"></table>
+
+    <h2>Bare Data with Simple Columns</h2>
+    <table class="paging-container grid-table" data-bind="grid: grid2"></table>
+
+    <h2>Javascript</h2>
+    <pre>
+var data = [ /* Some data /* ];
+
+return {
+    grid1: { data: data },
+        grid2: { 
+            data: data,
+            columns: [ 'firstName', 'Last Name']
+        }
+    };
+};
+    </pre>
+
+    <h2>HTML</h2>
+    <pre>&lt;table class="paging-container grid-table" data-bind="grid: grid1"&gt;&lt;/table&gt;</pre>
+    <pre>&lt;table class="paging-container grid-table" data-bind="grid: grid2"&gt;&lt;/table&gt;</pre>
+
+
+</div>
+

@@ -1,0 +1,15 @@
+{
+  "name": "Durandal-Grid",
+  "version": "2.0.0",
+  "description": "A grid widget for Durandal",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Timothy Moran <tyrsius@gmail.com> (http://tyrsius.com/)",
+  "license": "MIT",
+  "devDependencies": {
+    "express": "^4.4.1"
+  }
+}
