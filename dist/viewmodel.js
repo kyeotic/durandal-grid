@@ -101,7 +101,7 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 				search = self.query().toLowerCase();
 
 			if(self.searchColumns().length == 0)
-				return rows;
+				return rows.slice();
 
 			return ko.utils.arrayFilter(rows, function(row) {
 				for(var i = 0; i < self.searchColumns().length; i++) {
