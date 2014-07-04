@@ -53,6 +53,7 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 	//DefaultValues
 	//
 	var defaults = {
+    caption: '',
 		pageSize: 10,
 		pageSizeOptions: [25, 50, 75, 100],
 		alwaysShowPaging: false,
@@ -155,7 +156,14 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 			return sorted.sort(sort);
 		}).extend({ throttle: 10 }); //Throttle so that sortColumn and direction don't cause double update, it flickers
 		
-		
+
+    ///
+    //table caption
+    //
+    self.caption = ko.observable(config.caption)
+      ? config.caption
+      : ko.observable(config.caption !== undefined ? config.caption : defaults.caption);
+
 		///
 		//pagination
 		///

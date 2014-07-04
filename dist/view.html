@@ -1,5 +1,5 @@
 <table data-bind="css: gridClasses">
-    <caption data-part="caption"></caption>
+    <caption data-part="caption" data-bind="text: caption"></caption>
     <thead class="grid-columns" data-part="header">
         <tr data-bind="if: showSearchBox" data-part="search" class="grid-search">
             <td data-bind="attr: { colspan: columns().length }">
