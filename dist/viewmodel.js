@@ -100,19 +100,33 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 		self.filteredRows = ko.computed(function() {
 			var rows = self.allRows(),
 				search = self.query().toLowerCase();
+            		if (search == '')
+                		return rows.slice();
 
 			if(self.searchColumns().length == 0)
 				return rows.slice();
 
 			return ko.utils.arrayFilter(rows, function(row) {
 				for(var i = 0; i < self.searchColumns().length; i++) {
-					if(row[self.searchColumns()[i].property].toLowerCase().indexOf(search) >= 0) {
-						return true;
-					}
+			    		var v = row[self.searchColumns()[i].property];
+                    			v = ko.unwrap(v);
+		                    if (v) {
+		                        if ($.isNumeric(v)) {
+		                            if (v == search)
+		                                return true;
+		                        } 
+		                        else if (Date.parse(v)) {
+		                            if (Date.parse(v) == Date.parse(search))
+		                                return true;
+		                        }
+    					else if(v.toString().toLowerCase().indexOf(search) >= 0) {
+    						return true;
+    					}
+		                    }
 				}
 				return false;
 			});
-		}).extend({ throttle: 50 }); //We don't want typing to cause too many changes 
+		}).extend({ throttle: 200 }); //We don't want typing to cause too many changes  
 
 		
 		//sorting
