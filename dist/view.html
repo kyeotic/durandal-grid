@@ -25,12 +25,12 @@
             <td class="grid-footer" data-bind="attr: { colspan: columns().length }">
                 <div class="pull-left grid-page-container">
                     
-                    <button class="btn btn-sm btn-default" data-bind="click: pageToFirst"><i class="fa fa-step-backward"></i></button>
+                    <button class="btn btn-sm btn-default" data-bind="click: pageToFirst, enable: canPageBackward"><i class="fa fa-step-backward"></i></button>
                     <button class="btn btn-sm btn-default" data-bind="click: pageBackward, enable: canPageBackward"><i class="fa fa-play fa-rotate-180"></i></button>
                     Page <span data-bind="text: currentPageNumber"></span>
                     of <span data-bind="text: pageCount"></span>
                     <button class="btn btn-sm btn-default" data-bind="click: pageForward, enable: canPageForward"><i class="fa fa-play"></i></button>
-                    <button class="btn btn-sm btn-default" data-bind="click: pageToLast"><i class="fa fa-step-forward"></i></button>
+                    <button class="btn btn-sm btn-default" data-bind="click: pageToLast, enable: canPageForward"><i class="fa fa-step-forward"></i></button>
                 </div>
                 <div class="pull-right grid-page-size-container" data-bind="if: showPageSizeOptions">
                     Page Size: 
