@@ -160,7 +160,7 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
     ///
     //table caption
     //
-    self.caption = ko.observable(config.caption)
+    self.caption = ko.isObservable(config.caption)
       ? config.caption
       : ko.observable(config.caption !== undefined ? config.caption : defaults.caption);
 
