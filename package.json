@@ -1,6 +1,6 @@
 {
   "name": "Durandal-Grid",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "description": "A grid widget for Durandal",
   "main": "index.js",
   "dependencies": {

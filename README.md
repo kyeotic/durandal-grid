@@ -1,4 +1,4 @@
-Durandal Grid v2.0.0
+Durandal Grid v2.0.2
 =============
 
 A data-bindable grid widget with paging for Durandal.
