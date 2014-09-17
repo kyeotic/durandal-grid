@@ -7,7 +7,7 @@
     <ol>
         <li><strong>header</strong> - <small>The entire <code>&lt;thead&gt;</code> element</small></li>
         <li><strong>headerRow</strong> - <small>The <code>&lt;tr&gt;</code> element in the head containing the <code>foreach: columns</code> binding</small></li>
-        <li><strong>body</strong> - <small>The <code>&lt;tbody&gt;</code> element, which contains the <code>foreach: currentPageRows</code> binding</small></li>
+        <li><strong>body</strong> - <small>The <code>&lt;tbody&gt;</code> element, which contains the <code>foreach: rows/code> binding</small></li>
         <li><strong>footer</strong> - <small>The <code>&lt;tfoot&gt;</code> element, which contains the page buttons row, and the page size buttons row</small></li>
         <li><strong>pageRow</strong> - <small>The <code>&lt;tr&gt;</code> element of the page buttons, which contains the <code>if: showPaging</code> binding</small></li>
         <li><strong>pageSizeRow</strong> - <small>The <code>&lt;tr&gt;</code> element of the page size buttons, which tonains the <code>if showPageSizeOptions</code> binding</small></li>
@@ -20,7 +20,7 @@
     <h2>Overriding the Body</h2>
 
     <p>
-        Unfortunately, due to the way Durandal's data-part system works, the row inside the <code>&lt;tbody&gt;</code> cannot be made a data-part; it is contained inside a foreach loop, which clears out the internal contents and removes any data-part overrides. So the only option is to allow the whole <code>&lt;tbody&gt;</code> to be overridden. The "gotcha" here is that when you override a data-part, you don't override its children, you override the whole node. This means that the  <code>foreach: currentPageRows</code> bindings gets removed, breaking the grid. When you override the body, you must include this entire binding.
+        Unfortunately, due to the way Durandal's data-part system works, the row inside the <code>&lt;tbody&gt;</code> cannot be made a data-part; it is contained inside a foreach loop, which clears out the internal contents and removes any data-part overrides. So the only option is to allow the whole <code>&lt;tbody&gt;</code> to be overridden. The "gotcha" here is that when you override a data-part, you don't override its children, you override the whole node. This means that the  <code>foreach: rows</code> bindings gets removed, breaking the grid. When you override the body, you must include this entire binding.
     </p>
 
     <p>
@@ -30,8 +30,8 @@
     <h2>Example</h2>
     <button class="btn btn-sm btn-default" data-bind="click: addRow">Add Person</button>
 
-    <div data-bind="grid: gridConfig" class="table">
-        <tbody data-part="body" data-bind="foreach: { data: currentPageRows, as: 'row' }">
+    <table data-bind="grid: gridConfig" class="table">
+        <tbody data-part="body" data-bind="foreach: { data: rows, as: 'row' }">
             <tr>
                 <td data-bind="text: firstName"></td>
                 <td data-bind="text: lastName"></td>
@@ -39,7 +39,7 @@
                 <td><button class="btn btn-xs btn-danger" data-bind="click: $root.removeRow">Remove</button></td>
             </tr>
         </tbody>
-    </div>
+    </table>
 
     <h2>Javascript</h2>
     <pre>
@@ -65,15 +65,15 @@ return {
     </pre>
 
     <h2>HTML</h2>
-    <pre>&lt;table class="" data-bind="grid: gridConfig"&gt;
-    &lt;tbody data-part="body" data-bind="foreach: { data: currentPageRows, as: 'row' }"&gt;
-        &lt;tr&gt;
-            &lt;td data-bind="text: firstName"e&gt;&lt;/td&gt;
-            &lt;td data-bind="text: lastName"e&gt;&lt;/td&gt;
-            &lt;td data-bind="text: age"e&gt;&lt;/td&gt;
-            &lt;td&gt;&lt;button class="btn btn-xs btn-danger" data-bind="click: $root.removeRow"&gt;Remove&lt;/button&gt;&lt;/td&gt;
-        &lt;/tr&gt;
-    &lt;/tbody&gt;
-&lt;/table&gt;</pre>
+    <pre>&lt;table data-bind=&quot;grid: gridConfig&quot; class=&quot;table&quot;&gt;
+        &lt;tbody data-part=&quot;body&quot; data-bind=&quot;foreach: { data: currentPageRows, as: &#039;row&#039; }&quot;&gt;
+            &lt;tr&gt;
+                &lt;td data-bind=&quot;text: firstName&quot;&gt;&lt;/td&gt;
+                &lt;td data-bind=&quot;text: lastName&quot;&gt;&lt;/td&gt;
+                &lt;td data-bind=&quot;text: age&quot;&gt;&lt;/td&gt;
+                &lt;td&gt;&lt;button class=&quot;btn btn-xs btn-danger&quot; data-bind=&quot;click: $root.removeRow&quot;&gt;Remove&lt;/button&gt;&lt;/td&gt;
+            &lt;/tr&gt;
+        &lt;/tbody&gt;
+    &lt;/table&gt;</pre>
 </div>
 
