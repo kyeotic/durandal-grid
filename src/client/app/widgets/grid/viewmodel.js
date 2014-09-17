@@ -5,7 +5,6 @@
  */
 define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 
-
 	//====================== Support Code and Polyfills =====================//
 
 	var toNumber = function(input) { return parseFloat(input); };
@@ -84,7 +83,7 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 		//
 		// searching
 		//
-		self.query = ko.observable("");
+		self.query = ko.observable("").extend({ throttle: 200 }); //We don't want typing to cause too many changes  
 
 		self.searchColumns = ko.computed(function() {
 			var columnsToSearch = self.columns();
@@ -126,7 +125,7 @@ define(['durandal/app', 'knockout', 'jquery'], function (app, ko, $) {
 				}
 				return false;
 			});
-		}).extend({ throttle: 200 }); //We don't want typing to cause too many changes  
+		});
 
 		
 		//sorting
